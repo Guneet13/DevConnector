@@ -1,8 +1,10 @@
 const express = require('express');// create instance
 const gravatar = require('gravatar');
+const jwt = require('jsonwebtoken'); // generate token
 const bcrypt = require('bcryptjs'); // encryption library
 const router = express.Router(); // only routing instance of the class
 const User = require('../../models/User');
+const Keys = require('../../config/keys');
 
 //@route POST /api/users/register
 //@desc Register a user
@@ -57,7 +59,19 @@ router.post('/login', (req, res) => {
         if(!isMatch){
           return res.status(400).json({password: 'Password incorrect'});
         }else{
-          return res.json({msg: 'Success'});
+          //generate token
+          const payload = {
+            id: user.id,
+            name: user.name,
+            avatar: user.avatar
+          };
+          jwt.sign(
+            payload , 
+            keys.secretOrKey,
+            {expiresIn: 3600},//3600seconds is 1 hour
+            (err, token) => {
+              return res.json({token: 'Bearer'+token})
+            });
         }
       })
   })

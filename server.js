@@ -1,5 +1,6 @@
 const express = require('express');//imported express library
 const mongoose = require('mongoose');
+const passport  = require('passport');
 const db = require('./config/keys');
 const users = require('./routes/api/users');
 const posts = require('./routes/api/posts');
@@ -10,6 +11,8 @@ const app = express();// instance of express
 app.use(express.urlencoded);
 app.use(express.json());
 
+//Passport configuration
+app.use(passport.initialize());
 //lets write our first route
 app.get('/', (req,res) => res.send('Hello Server'));// anonymous function
 

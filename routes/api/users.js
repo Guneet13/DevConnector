@@ -1,17 +1,26 @@
 const express = require('express');// create instance
 const gravatar = require('gravatar');
-const jwt = require('jsonwebtoken'); // generate token
 const bcrypt = require('bcryptjs'); // encryption library
 const router = express.Router(); // only routing instance of the class
 const User = require('../../models/User');
+const jwt = require('jsonwebtoken'); // generate token
 const Keys = require('../../config/keys');
+const passport = require('passport');
+const validateRegisterInput = require('../../validation/register');
 
 //@route POST /api/users/register
 //@desc Register a user
 //@access public
 router.get('/register', (req,res) => {
+
+  //Validate user's input
+  const output = validateRegisterInput(req.body)
+  if(!output.isValid){
+    return res.status(400).json(output.errors);
+  }
+
   User.findOne({email: req.body.email})
-        .then(user => {
+        .then(user => { 
           if(user){
             return res.status(400).json({email: 'Email already exist!'});
           }else{
@@ -24,7 +33,7 @@ router.get('/register', (req,res) => {
               name: req.body.name,
               email: req.body.email,
               password: req.body.password,
-              avatar // desconstruction key:value 
+              avatar // deconstruction key:value 
             });// enter row data
 
             //encrypt password
@@ -76,5 +85,17 @@ router.post('/login', (req, res) => {
       })
   })
 })
+
+//@route GET /api/users/current
+//@desc Return current user info
+//@access Private
+
+router.get(
+  '/current', 
+  // extra parameter because its a private api
+  passport.authenticate('jwt', {session: false}), 
+  (req,res) => {
+      res.json(req.user);
+});
 
 module.exports = router;

@@ -1,4 +1,6 @@
+//Strategy will decrypt the token and read the payload
 const JwtStrategy = require('passport-jwt').Strategy;
+//ExtractJwt retrieve the token from the request
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const keys = require('./keys');
 const User = require('../models/user');

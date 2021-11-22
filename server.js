@@ -26,7 +26,7 @@ mongoose.connect(db.mongoURI)
         .then(() => console.log('mongodb is connected'))//called on success
         .catch((err)=> console.log(err));// called on failure
 
-const port = 5000;
+const port = 7000;
 app.listen(port, ()=> console.log(`server is running on port${port}`));// callback secondary thread in multi threading
 
 

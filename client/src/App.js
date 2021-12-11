@@ -13,7 +13,7 @@ import store from './store';
 class App extends Component {
   render() {
     return (
-      <Provider store={store}>
+      <Provider store={ store }>
         <Router>
           <div className="App">
           <Navbar />
